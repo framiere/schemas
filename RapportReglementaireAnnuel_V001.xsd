@@ -1,0 +1,1013 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="RapportReglementaireAnnuel">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" ref="A-Identification"/>
+                <xs:element maxOccurs="1" ref="B-SectionsContrats"/>
+                <xs:element maxOccurs="1" ref="C-RecapitulatifParVariante"/>
+                <xs:element maxOccurs="1" ref="D-BECashFlows"/>
+                <xs:element minOccurs="0" maxOccurs="1" ref="E-FairValueLignes"/>
+                <xs:element minOccurs="0" maxOccurs="1" ref="F-BestEstimatePassifs"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="A-Identification">
+        <xs:annotation>
+        	<xs:documentation>A-Identification: introduit le bloc "Identification" de la source ayant produit le fichier Xml
+        	</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" ref="A1-Application"/>
+                <xs:element maxOccurs="1" ref="A2-Societe"/>
+                <xs:element maxOccurs="1" ref="A3-DeviseLocale"/>
+                <xs:element maxOccurs="1" ref="A4-Environnement"/>
+                <xs:element maxOccurs="1" ref="A5-Publication"/>
+                <xs:element maxOccurs="1" ref="A6-Simulation"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="A1-Application">
+        <xs:annotation>
+        	<xs:documentation>A1-Application : introduit le sous-bloc "Application" 
+        	qui identifie l'application ayant fourni le fichier Xml
+			</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:annotation>
+            	<xs:documentation></xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element ref="ApplicationMetier"/>
+                <xs:element ref="SystemeSource"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ApplicationMetier" type="xs:normalizedString">
+                    	<xs:annotation>
+                		<xs:documentation>Application métier : sert à indiquer l'usage du fichier Xml fourni.
+
+Contient une des 2 valeurs suivantes: 
+"Reporting annuel S2 BE et SCR standard"t; 
+pour les fichiers Xml provenant de Solveo CSS.
+
+"Non défini"; possible, dans un 1er temps (janvier-février 2013)
+ pour les fichiers Xml provenant de Solveo.
+
+Nota: Les infos contenues dans ce fichier servent à alimenter une partie des états annuels 
+(états TP-F1, TP-F2, TP-F3 en partie, SCR-B3A et SCR-B3C).
+						</xs:documentation>
+                	</xs:annotation></xs:element>
+    <xs:element name="SystemeSource" type="xs:normalizedString">
+                    	<xs:annotation>
+                		<xs:documentation>SystemeSource : indique le SI et la version de ce SI ayant produit l'état Xml.
+
+Ex: 
+Solveo CSS - Version 4.100.50 - Février 2013
+Solveo - Version 3.500.42 - Décembre 2012
+						</xs:documentation>
+                	</xs:annotation></xs:element>
+    
+    <xs:element name="A2-Societe">
+        <xs:annotation>
+        	<xs:documentation>A2-Societe : introduit le sous-bloc "Société" qui identifie la société d'assurance 
+dont les résultats sont fournis dans le fichier Xml</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Groupe"/>
+                <xs:element ref="Filiale"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Groupe" type="xs:normalizedString">
+                   	<xs:annotation>
+                		<xs:documentation>Groupe: 
+Le rapport est produit pour une société d'assurance. Le Groupe est la maison mère de cete société.
+
+L'information est connue, de façon fiable, uniquement par Solveo CSS ; 
+pas par Solveo..
+						</xs:documentation>
+                	</xs:annotation></xs:element>
+    <xs:element name="Filiale" type="xs:normalizedString">
+                    	<xs:annotation>
+                		<xs:documentation>Filiale : société pour laquelle le rapport est produit.
+Les infos contenues dans le rapport concernent cette "Filiale".
+
+L'information est connue uniquement par Solveo CSS.
+Solveo ne la connait pas (en ce cas: Filiale = non défini).
+						</xs:documentation>
+                	</xs:annotation></xs:element>
+    <xs:element name="A3-DeviseLocale">
+        <xs:annotation>
+        	<xs:documentation>A3-DeviseLocale : introduit le sous-bloc "DeviseLocale" 
+qui identifie la devise dans laquelle sont exprimés les montants contenus dans le fichier Xml</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="NomDeviseLocale"/>
+                <xs:element ref="CodeDeviseLocale"/>           
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NomDeviseLocale" type="xs:normalizedString">
+                    	<xs:annotation>
+                		<xs:documentation>NomDeviseLocale : nom de la devise locale de la Filiale.
+C'est la devise dans laquelle sont exprimés les montants contenus dans le fichier.
+						</xs:documentation>
+                	</xs:annotation></xs:element>
+    <xs:element name="CodeDeviseLocale" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>CodeDeviseLocale : code de la devise locale de la Filiale (ex: EUR, USD).
+C'est la devise dans laquelle sont exprimés les montants contenus dans le fichier.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="A4-Environnement">
+        <xs:annotation>
+        	<xs:documentation>A4-Environnement : introduit le sous-bloc "Environnement" 
+qui identifie les données et hypothèses ayant permis de générer les infos
+contenues dans le fichier Xml</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="NomEnvironnement"/>
+                <xs:element ref="CodeEnvironnement"/>
+                <xs:element ref="DateSituationInit"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NomEnvironnement" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomEnvironnement : Au sens de Solveo, l’environnement regroupe l’ensemble des données, 
+des paramètres et des hypothèses nécessaires aux calculs de simulations.
+
+Le nom de l'environnement est une donnée connue des utilisateurs de Solveo,
+ce qui facilite l'identification des données sources des calculs.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CodeEnvironnement" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>CodeEnvironnement: code qui identifie l'environnement de façon unique.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="DateSituationInit" type="xs:date">
+    	<xs:annotation>
+    		<xs:documentation>DateSituationInit : date de l'arrêté comptable pour lequel on a produit le fichier Xml.
+
+Nota: Pour le reporting annuel, la date doit toujours correspondre au  31/12 d'une année.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="A5-Publication">
+        <xs:annotation>
+        	<xs:documentation>A5-Publication : introduit le sous-bloc "Publication" 
+qui identifie qui (et quand..) a décidé de publier le fichier Xml</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="DatePublication"/>
+                <xs:element ref="HeurePublication"/>
+                <xs:element ref="NomUtilisateur"/>
+                <xs:element ref="Commentaire"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DatePublication" type="xs:date">
+    	<xs:annotation>
+    		<xs:documentation>DatePublication: date de publication du fichier Xml
+
+Si le fichier provient de Solveo CSS, date à laquelle l'administrateur fonctionnel de Solveo CSS 
+a donné l'autorisation de publier l'environnement et le fichier Xml.
+
+Si le fichier provient de Solveo, date à laquelle le fichier a été confectionné.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="HeurePublication" type="xs:time">
+    	<xs:annotation>
+    		<xs:documentation>HeurePublication: heure correspondant à la DatePublication</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="NomUtilisateur" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomUtilisateur: identification de l'utilisateur ayant autorisé la publication.
+
+L'information n'est valide que si le fichier provient de Solveo CSS.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="Commentaire" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>Commentaire: commentaire ajouté par l'utilisateur au moment de la publication</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="A6-Simulation">
+        <xs:annotation>
+        	<xs:documentation>A6-Simulation : introduit le sous-bloc "Simulation" 
+qui identifie la simulation de Solveo CSS ou Solveo ayant produit
+les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="NomSimulation"/>
+                <xs:element ref="CodeSimulation"/>
+                <xs:element ref="DateEvaluation"/>
+                <xs:element ref="DureeSimulation"/>
+                <xs:element ref="JeuScenarios"/>
+                <xs:element ref="NappeScenarios"/>
+                <xs:element ref="NombreScenarios"/>
+                <xs:element ref="PolitiqueFinanciere"/>
+                <xs:element ref="FraisGeneraux"/>
+                <xs:element ref="PolitiqueResultats"/>
+                <xs:element ref="ActiviteAssurance"/>
+                <xs:element ref="DateLimitation"/>
+                <xs:element ref="ActiviteInvestissement"/>
+                <xs:element ref="A61-SectionsSimulees"/>
+                </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+    <xs:element name="NomSimulation" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomSimulation: identification de la simulation de Solveo CSS ou Solveo ayant servi à produire les calculs.
+
+Cette simulation figure dans l'environnement mentionné dans NomEnvironnement.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CodeSimulation" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>CodeSimulation: code qui identifie la simulation de façon unique, s'il provient de Solveo CSS.
+
+Code généré par Solveo CSS seulement.
+Solveo génère toujours le code : NONE</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="DateEvaluation" type="xs:date">
+    	<xs:annotation>
+    		<xs:documentation>DateEvaluation: date d'évaluation mentionnée dans la simulation ayant fourni les résultats.
+
+Pour le reporting annuel, cette date doit être identique à la DateSituationInit.
+En cas de reporting trimestriel, elle pourrait être différente.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="DureeSimulation" type="xs:integer">
+    	<xs:annotation>
+    		<xs:documentation>DureeSimulation: durée de la simulation ayant produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="JeuScenarios" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>JeuScenarios: identification du jeu de scénarios stochastiques ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="NappeScenarios" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NappeScenarios: identification de la nappe de scénarios stochastiques ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="NombreScenarios" type="xs:integer">
+    	<xs:annotation>
+    		<xs:documentation>NombreScenarios: identification du nombre de scénarios stochastiques ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="PolitiqueFinanciere" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>PolitiqueFinanciere: identification de la politique financière ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="FraisGeneraux" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>FraisGeneraux : identification de la politique de frais généraux ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="PolitiqueResultats" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>PolitiqueResultats : identification de la politique de résultats ayant servi pour la simulation
+qui a produit les résultats fournis dans le fichier Xml.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="ActiviteAssurance" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>ActiviteAssurance : identification de la limitation de l’activité assurance 
+qui a été adoptée dans la simulation ayant produit les résultats fournis dans le fichier Xml.
+
+Ex : run-off.
+
+La liste des différentes activités assurance possibles n'est pas arrêtée 
+car la réglementation sur ce sujet n'est pas fixée non plus.</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="DateLimitation" type="xs:date">
+    	<xs:annotation>
+    		<xs:documentation>DateLimitation : date à partir de laquelle la limitation de l'activité assurance
+a été appliquée (dans la simulation ayant ptoduit les résultats).</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="ActiviteInvestissement">
+        <xs:annotation>
+        	<xs:documentation>ActiviteInvestissement : identification de la limitation de l’activité d'investissement
+qui a été adoptée dans la simulation ayant produit les résultats fournis dans le fichier Xml.
+
+Ex : convergence</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+    <xs:restriction base="xs:normalizedString">
+    <xs:enumeration value="aucun réinvestissement"></xs:enumeration>
+    <xs:enumeration value="convergence"></xs:enumeration>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    <xs:element name="A61-SectionsSimulees">
+        <xs:annotation>
+        	<xs:documentation>SectionsSimulees : introduit la liste des sections simulées 
+dans la simulation ayant produit les résultats fournis dans le fichier Xml.
+			</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="NomSectionSimulee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NomSectionSimulee" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomSectionSimulee : nom de la section (ou du canton) dans Solveo CSS ou Solveo
+			</xs:documentation>
+    	</xs:annotation></xs:element>
+ 
+    <xs:element name="B-SectionsContrats">
+        <xs:annotation>
+        	<xs:documentation>B-SectionsContrats : introduit le bloc "SectionsContrats" qui fournit la liste des contrats 
+à l'intérieur de chaque section, ainsi que les infos permeftant d'alimenter les états TP-F1 et TP-F2.
+
+Ces 2 états sont par LoB. Ici les données sont fournies par contrat,
+avec l'identification du code LoB, au sens de Solveo CSS ou Solveo.
+			</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:annotation>
+            	<xs:documentation>B-SectionsContratsType : introduit la liste des sections et contrats 
+pour lesquels la simulation a produit des résultats.
+				</xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="Section">
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Section">
+        <xs:annotation>
+        	<xs:documentation>Section : donne certains identifiants au niveau section (=canton)
+et introduit la liste des contrats composant cette section.
+			</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="TypeSection">
+                    <xs:annotation>
+                    	<xs:documentation>TypeSection : identification du type de section (ou canton) dans SolveoCSS ou Solveo
+
+Ex: FondsPropres, UC, Contractuelle.
+						</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="CodeRFF">
+                    <xs:annotation>
+                    	<xs:documentation>CodeRFF : ce code identifie les « vrais » cantons au sens de S2.
+Il s’agit des Ring Fenced Funds tels que les Articles L441 ou les PERP. 
+
+Si la section (ou canton) est RFF (ring fenced fund), CodeRFF= 1
+Si la section (ou canton) n'est pas RFF (ce qui est le cas général), CodeRFF=0.
+						</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="CalculEquity">
+                    <xs:annotation>
+                    	<xs:documentation>CalculEquity: le choc action peut être standard, ou réduit (calcul appelé duration based). 
+
+Donc, 2 valeurs possibles pour CalculEquity: standard ou duration based.
+						</xs:documentation></xs:annotation></xs:element>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="Contrat">
+                    <xs:annotation>
+                    	<xs:documentation></xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="NomSection" use="required" type="xs:normalizedString">
+            	<xs:annotation>
+            		<xs:documentation>NomSection : identification de la section (ou canton) dans SolveoCSS ou Solveo
+					</xs:documentation>
+            	</xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+   </xs:element>
+    <xs:element name="TypeSection">
+     <xs:simpleType>
+    <xs:restriction base="xs:NMTOKEN">
+    <xs:enumeration value="FondsPropres"></xs:enumeration>
+    <xs:enumeration value="UC"></xs:enumeration>
+    <xs:enumeration value="Contractuelle"></xs:enumeration>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+   <xs:element name="CodeRFF">  
+     <xs:simpleType>
+	  	 	<xs:restriction base="xs:integer">
+   			<xs:enumeration value='0'/>
+			<xs:enumeration value='1'/>
+		</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+    <xs:element name="CalculEquity">
+     <xs:simpleType>
+  	 	<xs:restriction base="xs:string">
+   			<xs:enumeration value='standard'/>
+			<xs:enumeration value='duration based'/>
+		</xs:restriction>
+	</xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="Contrat">
+        <xs:annotation>
+        	<xs:documentation>Contrat : introduit la liste des contrats, contenant leur identification 
+et des éléments permettant d'alimenter les états TP-FI et TP-F2.
+			</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+              <xs:sequence>
+           		<xs:element ref="CodeLOB"/>
+	           	<xs:element ref="LineOfBusiness"/>
+           	 	<xs:element ref="NombreHRG"/>
+                <xs:element ref="NombreCellules"/>
+                <xs:element ref="ProvTechPCA"/>
+                <xs:element ref="ValeurRachat"/>
+                <xs:element ref="CapitauxGarantis"/>
+                <xs:element ref="TauxGaranti"/>
+                <xs:element ref="BEPrestGaranties"/>
+                <xs:element ref="BEParticipation"/>
+                <xs:element ref="BEFraisGestion"/>
+                <xs:element ref="BEPrimes"/>
+                <xs:element ref="BEAutresInflows"/>
+                <xs:element ref="BETotal"/>
+
+            </xs:sequence>
+           	<xs:attribute name="NomContrat" use="required" type="xs:normalizedString">
+           		<xs:annotation>
+           			<xs:documentation>NomContrat: nom donné au contrat et génération dans Solveo CSS et Solveo
+					</xs:documentation>
+           		</xs:annotation></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CodeLOB">
+              			<xs:annotation>
+           				<xs:documentation>CodeLoB: codification des LoB dans Solveo.
+
+La codification de Solveo est la suivante:
+110 : Life With Profit
+121 : Life Index Linked With Options
+122 : Life Index Linked No Options
+131 : Life Other With Options
+132 : Life Other No Options
+190 : Life Accepted Reinsurance
+210 : Non Life Annuities
+511 : Health STL With Options
+512 : Health STL No Options
+520 : Health STL Annuities
+590 : Health STL Accepted Reinsurance
+999 : Non renseigné
+						</xs:documentation>
+           			</xs:annotation>
+       	<xs:simpleType>
+    <xs:restriction base="xs:integer">
+    <xs:enumeration value="110"></xs:enumeration>
+    <xs:enumeration value="121"></xs:enumeration>
+    <xs:enumeration value="122"></xs:enumeration>
+    <xs:enumeration value="131"></xs:enumeration>
+    <xs:enumeration value="132"></xs:enumeration>
+    <xs:enumeration value="210"></xs:enumeration>
+    <xs:enumeration value="190"></xs:enumeration>
+    <xs:enumeration value="511"></xs:enumeration>
+    <xs:enumeration value="512"></xs:enumeration>
+    <xs:enumeration value="520"></xs:enumeration>
+    <xs:enumeration value="590"></xs:enumeration>
+    <xs:enumeration value="999"></xs:enumeration>
+    </xs:restriction>
+    </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="LineOfBusiness" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>LineOfBusiness : libellé du LoB</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="NombreHRG" type="xs:integer">
+    	<xs:annotation>
+    		<xs:documentation>Nombre HRG : nombre de regroupement homogène de risques.
+Constitue le niveau le plus fin, au passif, des restitutions de Solveo CSS ou Solveo.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="NombreCellules" type="xs:integer">
+    	<xs:annotation>
+    		<xs:documentation>NombreCellules : nombre de cellules de calcul dans Solveo CSS ou CSS.
+Constitue le niveau le plus fin des calculs.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="ProvTechPCA" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>ProvTechnPCA : montant des provisions du contrat (provisions au sens PCA - Solva I) 
+à la date de l'arrêté (situation initiale de Solveo); montant enregistré dans Solveo CSS ou Solveo.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="ValeurRachat" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>ValeurRachat: montant de la valeur de rachat du contrat à la date de l'arrêté (situation initiale de Solveo); 
+montant calculé par Solveo CSS ou Solveo.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CapitauxGarantis" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>CapitauxGarantis : montant des capitaux garantis du contrat à la date de l'arrêté (situation initiale de Solveo); 
+montant enregistré dans Solveo CSS ou Solveo.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="TauxGaranti" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>TauxGaranti : montant du taux garanti sur le contrat à la date de l'arrêté (situation initiale de Solveo); 
+montant enregistré dans Solveo CSS ou Solveo.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEPrestGaranties" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPrestGaranties: Best Estimate des prestations garanties Base (avant choc),
+calculé par Solveo CSS ou Solveo, à la date de l'évaluation. Pour BA1, BA2, etc... du TP-F1.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEParticipation" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEParticipation: Best Estimate des participations aux bénéfices futures,
+calculé par Solveo CSS ou Solveo, à la date de l'évaluation. Pour BB1 du TP-F1.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEFraisGestion" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEFraisGestion: Best Estimate des frais de gestion,
+calculé par Solveo CSS ou Solveo, à la date de l'évaluation. Pour BC1, BC2,.. du TP-F1.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEPrimes" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPrimes: Best Estimate des primes et versements futurs
+calculé par Solveo CSS ou Solveo, à la date de l'évaluation. Pour BD1, BD2, etc... du TP-F1.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEAutresInflows" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEAutresInflows: Best Estimate des autres cash in-flows, à la date de l'évaluation. 
+Pour BF1, BF2, etc... du TP-F1.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BETotal" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BETotal: Best Estimate total Base (avant choc),
+calculé par Solveo CSS ou Solveo, à la date de l'évaluation. Pour B1, B2, etc... du TP-F1.
+						</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="C-RecapitulatifParVariante">
+           <xs:annotation>
+        	<xs:documentation>C-RecapitulatifParVariante : introduit le bloc "Récapitulatif par variante" qui donne, pour chaque choc,
+ les valeurs avant et après choc des BE et des actifs impactés par les chocs.
+A chaque "variante" de Solveo correspond un choc.
+			</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>     
+            <xs:sequence>
+                <xs:element ref="TypeVariantes"/>
+                <xs:element maxOccurs="1" ref="CBase"/>
+                <xs:element maxOccurs="unbounded" ref="CVariante"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+   <xs:element name="TypeVariantes" type="xs:normalizedString">
+        <xs:annotation>
+        	<xs:documentation>TypeVariantes : Permet d'identifier le cadre réglementaire 
+avec lequel les variantes de chocs ont été créées dans Solveo CSS ou Solveo.
+Pour le reporting réglementaire du 31/12/2012,
+le TypeVariantes du reporting réglementaire S2 est : Choc réglementaire S2 normes Eiopa 2012.</xs:documentation></xs:annotation>
+   </xs:element>
+   
+   <xs:element name="CBase" abstract="false">
+        <xs:annotation>
+        	<xs:documentation>CBase : introduit les montants obtenus, pour alimenter le bloc C-RecapitulatifParVariante, 
+sur la simulation de Base (avant choc)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="MnemoVariante"/>
+                <xs:element ref="NomVariante"/>
+                <xs:element ref="FVActifTotalBase"/>
+                <xs:element ref="BEPassifTotalBase"/>
+             </xs:sequence>
+            <xs:attribute name="CodeVariante" use="required" type="xs:integer">
+            	<xs:annotation>
+            		<xs:documentation>CodeVariante : codification correspondant à la variante, c-à-d à la simulation sans choc (Base) ou avec un choc.
+Pour la codification, voir: MnemoVariante.
+</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType>
+   </xs:element>   
+      <xs:element name="FVActifTotalBase" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>FVActifTotalBase : Fair value totale des actifs (toutes lignes confondues) avant choc (base=avant choc)</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="BEPassifTotalBase" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPassifTotalBase : BE total des engagements (tous contrats confondus) avant choc (base=avant choc)</xs:documentation>
+    	</xs:annotation></xs:element>
+     
+   <xs:element name="CVariante">
+        <xs:annotation>
+        	<xs:documentation>CVariante : introduit les montants obtenus, pour alimenter le bloc C-RecapitulatifParVariante,
+sur les variantes (=les simulations avec chocs). </xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+   	         <xs:element ref="MnemoVariante"/>
+             <xs:element ref="NomVariante"/>
+             <xs:element ref="FVActifImpacteBase"/>
+    	     <xs:element ref="FVActifImpacteChoc"/>
+             <xs:element ref="BEPassifImpacteBase"/>
+             <xs:element ref="BEPassifImpacteChoc"/>
+             <xs:element ref="BEPassifImpacteChocEx"/>
+           </xs:sequence>
+           <xs:attribute name="CodeVariante" use="required" type="xs:integer">
+           	<xs:annotation>
+           		<xs:documentation>CodeVariante : codification correspondant à la variante, c-à-d à la simulation sans choc (Base) ou avec un choc.
+           		</xs:documentation>
+           	</xs:annotation></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MnemoVariante" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>MnemoVariante : identifiant court de la variante (= du choc) ayant été simulé.
+
+La liste des codes variantes, mnémos et libellés est donnée ci-après:
+
+Codes	Mnémos	Libellés
+100		BASE		Situation avant choc
+211		INTUP		Hausse des taux
+212		INTDW		Baisse des taux
+221		EQT1  		Baisse des actions type 1
+222		EQT2		Baisse des actions type 2
+230		PROP		Baisse de l'immobilier
+241		FXUP		Hausse des cours devises
+242		FXDW		Baisse des cours devises
+251		SPRD1		Hausse des spreadsoblig
+252		SPRD2		Hausse des spreads CDO
+253		SPRD3		Hausse des spreads CDS
+260 	CONC		Risque de concentration
+290		CCPR		Baisse de la prime contra cyclique
+
+510		MRTL		Hausse de la mortalité
+520		LNGV		Baisse de la mortalité
+530		DISAB		Hausse  morbidité invalidité
+541		LAPSUP		Hausse des rachats
+542		LAPSDW		Baisse des rachats
+543		LAPSM		Rachats transferts en masse
+550		EXPR		Hausse des frais de gestion
+560		REVR		Révision des rentes
+570		CATS		Hausse ponctuelle décès inva
+</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="NomVariante" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomVariante : libellé de la variante (= du choc) ayant été simulé.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="FVActifImpacteBase" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>FVActifImpacteBase : fair value des actifs impactés par le choc mesurée avant le choc (avant le choc =base)</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="FVActifImpacteChoc" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>FVActifImpacteChoc : fair value des actifs impactés par le choc mesurée après le choc</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="BEPassifImpacteBase" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPassifImpacteBase : BE des passifs impactés par le choc mesurée avant le choc. 
+Si aucun passif n’est impacté, cette valeur sera à zéro.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEPassifImpacteChoc" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPassifImpacteChoc : BE des passifs impactés par le choc mesurée après le choc. 
+Si aucun passif n’est impacté, cette valeur sera à zéro.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="BEPassifImpacteChocEx" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEPassifImpacteChocEx : BE des passifs impactés par le choc mesuré après le choc 
+hors effet d’absorption des provisions techniques</xs:documentation></xs:annotation></xs:element>
+  
+    <xs:element name="D-BECashFlows">
+        <xs:annotation>
+        	<xs:documentation>D-BECashFlows : introduit le bloc BECashFlows dans lequel on trouve
+les cash-flows des contrats sur 51 ans (pour TP-F2). Cet état est par LoB.
+
+Ici les données sont fournies par contrat,
+avec l'identification du code LoB, au sens de Solveo CSS ou Solveo.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="BECashFlowsContrat"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BECashFlowsContrat">
+        <xs:annotation>
+        	<xs:documentation>BECashFlowsContrat : introduit la liste des contrats avec leurs cash-flows
+</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+ 		        <xs:element ref="CodeLOB"/>
+                <xs:element minOccurs="51" maxOccurs="51" ref="BECashFlowsAnnee"/>
+            </xs:sequence>
+            <xs:attribute name="NomSection" use="required" type="xs:normalizedString">
+            	<xs:annotation>
+            		<xs:documentation>NomSection : identification, dans SolveoCSS ou Solveo, de la section (ou canton) 
+contenant le contrat.
+</xs:documentation></xs:annotation></xs:attribute>
+			<xs:attribute name="NomContrat" use="required" type="xs:normalizedString">
+             	<xs:annotation>
+             		<xs:documentation>NomContrat : nom donné au contrat et génération dans Solveo CSS et Solveo</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BECashFlowsAnnee">
+        <xs:annotation>
+        	<xs:documentation>BECashFlowsAnnee : introduit la liste des années avec les cash-flows pour un contrat</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="CFPrestations"/>
+                <xs:element ref="CFFraisGestion"/>
+                <xs:element ref="CFPrimes"/>
+                <xs:element ref="CFAutresInflows"/>
+            </xs:sequence>
+            <xs:attribute name="annee" use="required">
+                <xs:annotation>
+                	<xs:documentation>annee : n° d'année future. 
+La dernière année où les cash-flows sont non nuls
+contient les cash-flows relatifs à la liquidation finale.</xs:documentation></xs:annotation>
+                <xs:simpleType>
+  		    		<xs:restriction base="xs:integer">
+   						<xs:minInclusive value='1'/>
+						<xs:maxInclusive value='51'/>
+					</xs:restriction>
+				</xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="CFPrestations" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>CFPrestations : Cash-flows futurs des prestations (somme des prestations garanties 
+et des participations futures) pour chaque année.</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="CFFraisGestion" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>CFFraisGestion : Cash-flows futurs des frais de gestion pour chaque année.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CFPrimes" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>CFPrimes : Cash-flows futurs des primes et versements pour chaque année</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CFAutresInflows" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>CFAutresInflows : Cash-flows futurs des autres cash in-flows pour chaque année.</xs:documentation></xs:annotation></xs:element>
+ 
+    <xs:element name="E-FairValueLignes">
+        <xs:annotation>
+        	<xs:documentation>E-FairValueLignes : introduit le bloc FairValueLignes qui, donne pour chaque ligne d'actif,
+sa fait value avant et après choc.
+
+Ce bloc permet de connaitre l'impact du choc sur chaque ligne d'actif
+et d'alimenter le reporting réglementaire (SCR-B3A et SCR-B3C) si le code FlagReport est à 1,
+c'est-à-dire si la ligne d'actif est impactée par le choc.
+</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="LigneActifDetaille"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="LigneActifDetaille">
+        <xs:annotation>
+        	<xs:documentation>LigneActifDetaille : introduit chaque ligne d'actif avec ses caractéristiques pour le reporting 
+et ses fair values suivant les différents variantes (=les différents chocs)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" ref="CaracteristiquesLigne"/>
+                <xs:element maxOccurs="1" ref="FairValueLigneVariantes"/>
+            </xs:sequence>            
+            <xs:attribute name="NomSection" use="required" type="xs:normalizedString">
+            	<xs:annotation>
+            		<xs:documentation>NomSection : identification, dans SolveoCSS ou Solveo, de la section (ou canton) 
+contenant le titre. </xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="SousPortefeuille" use="optional" type="xs:normalizedString">
+            	<xs:annotation>
+            		<xs:documentation>SousPortefeuille : identification, dans SolveoCSS ou Solveo, du sous-portefeuille
+(sous la section) contenant le titre. </xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="CodeTitre" use="required" type="xs:normalizedString">
+            	<xs:annotation>
+            		<xs:documentation>CodeTitre : codification du titre (code ISIN, code valeur, code immeuble, ...)</xs:documentation></xs:annotation></xs:attribute>
+             <xs:attribute name="CodeBlocage" use="required" type="xs:integer">
+             	<xs:annotation>
+             		<xs:documentation>CodeBlocage : codification du staut du titre : bloqué à la vnete ou non.
+Bloqué à la vente = 1
+Non bloqué = 0</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="CaracteristiquesLigne">
+        <xs:annotation>
+        	<xs:documentation>CaracteristiquesLigne : introduit, pour une ligne d'actif, ses principales caractéristiques</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                 <xs:element ref="LibelleTitre"/>
+                <xs:element ref="CategorieTitre"/>
+                <xs:element minOccurs="0" ref="NotationTitre"/>
+                <xs:element ref="SensibiliteSpread"/>
+                <xs:element ref="DeviseTitre"/>
+    </xs:sequence>
+    </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="LibelleTitre" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>LibelleTitre : libellé du titre ou de la ligne d'actif</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CategorieTitre" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>CategorieTitre : mnémo permettant d'identifier la catégorie générale du titre ou de la ligne dans Solveo.
+
+Mnémo	Libellé
+OTF		Obligations taux fixes
+OII			Obligations indexées inflation
+OTV-C		Obligations taux variables à réf. courte
+OTV-L		Obligations taux variables à réf. Longue
+TCN		Titres de créances négociables
+PSCA19		Pdts structurés taux capitalisant R332-19
+PSCA20		Pdts structurés taux capitalisant R332-20
+PSDI19		Pdts structurés taux distribuant R332-19
+PSDI20		Pdts structurés taux distribuant R332-20
+Prêt		Prêts
+OpO		Opcvm obligataires
+OpD		Opcvm diversifiés
+ACT		Actions
+OpM		Opcvm monétaires
+R19			Autres titres divers R 332-19
+Mon		Monétaires
+Liq			Liquidités
+IMMO		Immobilier
+PDAPUT	Pdts derivés actions (Put)
+PDACALL	Pdts derivés actions (Call)
+PDTFLOOR 	Pdts derivés taux (Floor)
+PDTCAP 	Pdts derivés taux (Cap)
+
+</xs:documentation>
+    	</xs:annotation></xs:element>
+    <xs:element name="NotationTitre" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NotationTitre : notation provenant du système de gestion des titres 
+et importée dans Solveo avec le portefeuille initial</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="SensibiliteSpread" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>SensibiliteSpread : sensibilité de la ligne à une variation du spread, 
+calculée par Solveo (conventionnellement notée avec un signe positif)</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="DeviseTitre">
+        <xs:annotation>
+        	<xs:documentation>DeviseTitre : introduit différentes informations relatives à la devise
+dans laquelle le titre est inscrit en comptabilité</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="NomDeviseTitre"/>
+                <xs:element ref="CodeDeviseTitre"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="NomDeviseTitre" type="xs:normalizedString">
+    	<xs:annotation>
+    		<xs:documentation>NomDeviseTitre : Par défaut il s’agit du nom de la devise locale. 
+S’il s’agit d’une autre devise, les montants sont toujours exprimés en devise locale.</xs:documentation></xs:annotation></xs:element>
+    <xs:element name="CodeDeviseTitre" type="xs:NMTOKEN">
+    	<xs:annotation>
+    		<xs:documentation>CodeDeviseTitre : Par défaut il s’agit du code (en 3 lettres, ex: EUR) identifiant la devise locale. 
+S’il s’agit d’une autre devise, les montants sont toujours exprimés en devise locale.</xs:documentation>
+    	</xs:annotation></xs:element>
+ 
+    <xs:element name="FairValueLigneVariantes">
+        <xs:annotation>
+        	<xs:documentation>FairValueLigneVariantes : introduit la liste des FV de la ligne en fonction de la variante (=du choc) simulé.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+               <xs:element maxOccurs="1" ref="EBase"/>
+               <xs:element maxOccurs="unbounded" ref="EVariante"/>
+          </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="EBase">
+        <xs:annotation>
+        	<xs:documentation>EBase : introduit les montants obtenus, pour alimenter le bloc E-FairValueLignes, 
+sur la simulation de Base (avant choc)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="MnemoVariante"/>
+                <xs:element ref="ValeurLigneBase"/>
+             </xs:sequence>
+            <xs:attribute name="CodeVariante" use="required" type="xs:integer"/>
+        </xs:complexType>
+   </xs:element>   
+   <xs:element name="ValeurLigneBase" type="xs:double">
+   	<xs:annotation>
+   		<xs:documentation>ValeurLigneBase: Fair Value de la ligne avant choc. 
+Il s’agit d’une valeur de marché totale (incluant les coupons courus pour les obligations).
+</xs:documentation></xs:annotation></xs:element>   
+     
+   <xs:element name="EVariante">
+        <xs:annotation>
+        	<xs:documentation>EVariante : introduit les montants obtenus, pour alimenter le bloc E-FairValueLignes,
+sur les variantes (=les simulations avec chocs). </xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+   	         <xs:element ref="MnemoVariante"/>
+             <xs:element ref="FlagReport"/>
+             <xs:element ref="QualificationS2"/>
+			 <xs:element minOccurs="0" ref="CategorieS2"/>
+ 			 <xs:element minOccurs="0" ref="NotationS2"/>
+ 			 <xs:element minOccurs="0" ref="TypeForcage"/>
+ 			 <xs:element minOccurs="0" ref="NiveauForcage"/>
+             <xs:element ref="ValeurLigneChoc"/>
+		   </xs:sequence>
+           <xs:attribute name="CodeVariante" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="FlagReport">
+        <xs:annotation>
+        	<xs:documentation>FlagReport : le flag vaut 1 si le titre (ou le contrat) est impacté par le choc considéré, 
+0 si le titre (ou le contrat) n’est pas concerné. </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+  	 	<xs:restriction base="xs:integer">
+   			<xs:enumeration value='0'/>
+			<xs:enumeration value='1'/>
+		</xs:restriction>
+	</xs:simpleType>
+	</xs:element>
+     <xs:element name="QualificationS2">
+        <xs:annotation>
+        	<xs:documentation>QualificationS2 : un titre fait l'objet d'une qualification S2 (=oui) s'il a fait l'objet
+d'un rajout d'information par rapport aux caractéristiques de "CaracteristiquesLigne".
+
+En ce cas, les informations rajoutée peuvent être : CategorieS2, NotationS2, TypeForcage, NiveauForcage.
+(L'information rajoutée est donnée dans les tags correspondant).
+</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+  	 	<xs:restriction base="xs:string">
+   			<xs:enumeration value='oui'/>
+			<xs:enumeration value='non'/>
+		</xs:restriction>
+	</xs:simpleType>
+    </xs:element>
+    <xs:element name="CategorieS2" type="xs:normalizedString"/>
+    <xs:element name="NotationS2" type="xs:normalizedString"/>
+    <xs:element name="TypeForcage">
+        <xs:annotation>
+        	<xs:documentation>TypeForcage : type de forcage rajouté sur ce titre pour :
+soit n'appliquer aucun forcage (aucun)
+soit forcer la sensibilité du titre au choc considéré (sensibilite)
+soit forcer le taux de variation de la valeur du titre, suite au choc considéré (variation)</xs:documentation></xs:annotation>
+        <xs:simpleType>
+    	<xs:restriction base="xs:string">
+    	<xs:enumeration value="Aucun"></xs:enumeration>
+    	<xs:enumeration value="Sensibilité"></xs:enumeration>
+    	<xs:enumeration value="Variation"></xs:enumeration>
+     	</xs:restriction>   	
+    	</xs:simpleType>
+    </xs:element>
+    <xs:element name="NiveauForcage" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>NiveauForcage : indique le niveau du forcage, si le TypeForcage est sensibilité ou variation. </xs:documentation></xs:annotation></xs:element>
+    <xs:element name="ValeurLigneChoc" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>ValeurLigneChoc : Fair Value de la ligne après choc. 
+Il s’agit d’une valeur de marché totale (incluant les coupons courus pour les obligations).
+    		</xs:documentation>
+    	</xs:annotation></xs:element>   
+   
+    <xs:element name="F-BestEstimatePassifs">
+        <xs:annotation>
+        	<xs:documentation>F-BestEstimatePassifs : introduit le bloc BestEstimatePassifs qui, donne pour chaque ligne contrat,
+son Best Estimate (BE) avant et après choc.
+
+Ce bloc permet de connaitre l'impact du choc sur chaque contrat
+et d'alimenter le reporting réglementaire (SCR-B3A et SCR-B3C) si le code FlagReport est à 1,
+c'est-à-dire si le contrat est impacté par le choc.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="ContratPassifDetaille"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ContratPassifDetaille">
+        <xs:annotation>
+        	<xs:documentation>ContratPassifDetaille : introduit chaque contrat avec ses caractéristiques pour le reporting (LoB)
+et ses Best Estimate suivant les différents variantes (=les différents chocs)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+        	   	<xs:element ref="CodeLOB"/>
+                <xs:element maxOccurs="1" ref="BEContratVariantes"/>
+            </xs:sequence>
+            <xs:attribute name="NomContrat" use="required" type="xs:normalizedString"/>
+            <xs:attribute name="NomSection" use="required" type="xs:normalizedString"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BEContratVariantes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" ref="FBase"/>
+                <xs:element maxOccurs="unbounded" ref="FVariante"/>
+          </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+      <xs:element name="FBase">
+        <xs:annotation>
+        	<xs:documentation>FBase : introduit les montants obtenus, pour alimenter le bloc F-BestEstimatePassifs, 
+sur la simulation de Base (avant choc)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="MnemoVariante"/>
+                <xs:element ref="BEParticipationBase"/>
+                <xs:element ref="BETotalBase"/>
+              </xs:sequence>
+            <xs:attribute name="CodeVariante" use="required" type="xs:integer"/>
+        </xs:complexType>
+   </xs:element>   
+    <xs:element name="BEParticipationBase" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEParticipationBase : Best Estimate des participations aux bénéfices futures du contrat avant choc
+(base = avant choc).</xs:documentation></xs:annotation></xs:element>
+	<xs:element name="BETotalBase" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>BETotalBase: Best Estimate Total du contrat avant choc
+(base = avant choc).</xs:documentation></xs:annotation></xs:element>
+     
+   <xs:element name="FVariante">
+        <xs:annotation>
+        	<xs:documentation>FVariante : introduit les montants obtenus, pour alimenter le bloc F-BestEstimatePassifs,
+sur les variantes (=les simulations avec chocs)</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+   	         <xs:element ref="MnemoVariante"/>
+             <xs:element ref="FlagReport"/>
+         	 <xs:element ref="BEParticipationChoc"/>
+         	 <xs:element ref="BETotalChoc"/>
+		   </xs:sequence>
+           <xs:attribute name="CodeVariante" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="BEParticipationChoc" type="xs:double">
+    	<xs:annotation>
+    		<xs:documentation>BEParticipationChoc :Best Estimate des participations aux bénéfices futures du contrat après choc</xs:documentation></xs:annotation></xs:element>
+	<xs:element name="BETotalChoc" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>BETotalChoc : Best Estimate Total du contrat après choc</xs:documentation></xs:annotation></xs:element>
+</xs:schema>
